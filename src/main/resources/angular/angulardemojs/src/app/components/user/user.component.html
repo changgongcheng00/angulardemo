@@ -1,0 +1,40 @@
+<div class="title">Angular增删改查基础测试demo</div>
+<div class="body">
+  <div class="body-button">
+    <button (click)="getData()">查询</button>
+    <button (click)="addData()">新增</button>
+  </div>
+  <div class="body-table">
+    <table>
+      <tr>
+        <td>选择</td>
+        <td>用户名</td>
+        <td>密码</td>
+        <td>手机号</td>
+        <td>年龄</td>
+      </tr>
+      <tr *ngFor="let e of arr;let i = index">
+        <td><input type="checkbox" name="id" value="{{e.id}}">{{i}}</td>
+        <td>{{e.username}}</td>
+        <td>{{e.password}}</td>
+        <td>{{e.tel}}</td>
+        <td>{{e.age}}</td>
+        <td><button (click)="editData(e.id)">修改</button></td>
+        <td><button (click)="remove(e.id)">删除</button></td>
+      </tr>
+    </table>
+  </div>
+  <div class="body-form" [ngStyle]="{display:isShow==1?'block':'none'}">
+    <div class="form">
+      <div class="form-text" id="formdata"></div>
+      <form #form>
+        <input type="hidden" id="id"/>
+        <div> 用户名：<input name="username" id="username" type="text" placeholder="请输入用户名"/></div>
+        <div> 密&nbsp;&nbsp;&nbsp;码：<input name="password" id="password" type="password" placeholder="请输入密码"/></div>
+        <div> 手机号：<input name="tel" type="text" id="tel" placeholder="请输入手机号"/></div>
+        <div> 年&nbsp;&nbsp;&nbsp;龄：<input name="age" id="age" type="text" placeholder="请输入年龄"/></div>
+        <div><button type="button" (click)="submit()">提交</button></div>
+      </form>
+    </div>
+  </div>
+</div>
