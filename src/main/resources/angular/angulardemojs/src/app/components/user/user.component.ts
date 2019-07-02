@@ -36,7 +36,7 @@ export class UserComponent implements OnInit {
   addData() {
     this.isShow = 1;
     document.getElementById('formdata').innerText = '用户新增页面';
-    this.souUrl = 'http://localhost:8080/angular/addUser';
+    this.souUrl = 'http://localhost:8080/angular/addUserCheck';
   }
   editData(id) {
     this.isShow = 1;
@@ -61,6 +61,12 @@ export class UserComponent implements OnInit {
       const datas: any = e;
       if (datas.code === 0) {
         this.ngOnInit();
+      } else if ( datas.code === 3000) {
+        const flag = confirm('已经存在相似的文本如下,是否仍然提交：' + datas.data );
+        if (flag === true ) {
+          this.souUrl = 'http://localhost:8080/angular/addUser';
+          this.submit();
+        }
       } else {
         alert(datas.msg);
       }
