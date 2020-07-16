@@ -1,6 +1,7 @@
 package com.cheng.angulardemo.controller;
 
 import com.cheng.angulardemo.entity.User;
+import com.cheng.angulardemo.general.ErrorException;
 import com.cheng.angulardemo.general.RepeatCheckUtil;
 import com.cheng.angulardemo.general.ResponseData;
 import com.cheng.angulardemo.service.AngularService;
@@ -23,6 +24,11 @@ import java.util.List;
 public class AngularController {
 
     private static final Logger logger = LoggerFactory.getLogger(AngularController.class);
+
+    /**
+     * 相似度值
+     */
+    private static final float SIMILARITY = (float) 0.5;
     
     @Autowired
     AngularService angularService;
@@ -44,18 +50,19 @@ public class AngularController {
             List<String> strList = new ArrayList<>();
             for(User u : users){
                 float f = RepeatCheckUtil.getSimilarityRatio(user.getUsername(),u.getUsername());
-                if(f>0.1){
+                if(f>AngularController.SIMILARITY){
                     strList.add(u.getUsername());
                 }
             }
             if(strList.size()>0){
-                return ResponseData.error(strList,3000,"存在重复文本");
+                return ResponseData.error(strList,ErrorException.REPEAT_ERROR,"存在重复文本");
+            }else{
+                return ResponseData.error(strList,ErrorException.NO_REPEAT_ERROR,"不存在重复文本");
             }
         }catch (Exception e) {
             logger.error(e.toString());
-            return ResponseData.error(500,"系统错误");
+            return ResponseData.error(ErrorException.ERROR,"系统错误");
         }
-        return ResponseData.success();
     }
 
     @PostMapping(value = "/addUser")
@@ -64,10 +71,10 @@ public class AngularController {
             angularService.addUser(user);
         }catch (DuplicateKeyException e){
             logger.error(e.toString());
-            return ResponseData.error(500,"用户名已存在");
+            return ResponseData.error(ErrorException.ERROR,"用户名已存在");
         }catch (Exception e) {
             logger.error(e.toString());
-            return ResponseData.error(500,"系统错误");
+            return ResponseData.error(ErrorException.ERROR,"系统错误");
         }
         return ResponseData.success();
     }
@@ -78,10 +85,10 @@ public class AngularController {
             angularService.updateUser(user);
         }catch (DuplicateKeyException e){
             logger.error(e.toString());
-            return ResponseData.error(500,"用户名已存在");
+            return ResponseData.error(ErrorException.ERROR,"用户名已存在");
         } catch (Exception e) {
             logger.error(e.toString());
-            return ResponseData.error(500,"系统错误");
+            return ResponseData.error(ErrorException.ERROR,"系统错误");
         }
         return ResponseData.success();
     }
@@ -90,7 +97,7 @@ public class AngularController {
         try {
             angularService.removeUser(Integer.parseInt(id));
         } catch (Exception e) {
-            return ResponseData.error(500,"系统错误");
+            return ResponseData.error(ErrorException.ERROR,"系统错误");
         }
         return ResponseData.success();
     }
